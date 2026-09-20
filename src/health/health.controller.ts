@@ -7,7 +7,7 @@ import {
 
 import { RedisService } from 'src/redis/redis.service';
 
-@Controller('health') //GET http://localhost:3000/api/v1/health
+@Controller('health')
 export class HealthController {
   constructor(
     private readonly health: HealthCheckService,
@@ -15,7 +15,7 @@ export class HealthController {
     private readonly redis: RedisService,
   ) {}
 
-  @Get()
+  @Get() //GET http://localhost:3000/api/v1/health
   @HealthCheck()
   check() {
     return this.health.check([

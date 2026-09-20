@@ -1,9 +1,9 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-export async function getTypeOrmConfig(
+export function getTypeOrmConfig(
   configService: ConfigService,
-): Promise<TypeOrmModuleOptions> {
+): TypeOrmModuleOptions {
   return {
     type: 'mysql',
     host: configService.getOrThrow<string>('database.host'),

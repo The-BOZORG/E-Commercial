@@ -10,5 +10,9 @@ export default Joi.object({
   DATABASE_HOST: Joi.string().required(),
   DATABASE_NAME: Joi.string().required(),
   DATABASE_USERNAME: Joi.string().required(),
-  REDIS_URL: Joi.string().required(),
+  REDIS_URL: Joi.string().uri().required(),
+  JWT_ACCESS_SECRET: Joi.string().required(),
+  JWT_ACCESS_EXPIRATION: Joi.string().required(),
+  JWT_REFRESH_SECRET: Joi.string().required(),
+  JWT_REFRESH_EXPIRATION: Joi.string().required(),
 });

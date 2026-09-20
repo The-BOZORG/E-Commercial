@@ -1,20 +1,22 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { databaseConfig } from './config/database.config';
 import validateEnvConfig from './config/validate.env.config';
 import { getTypeOrmConfig } from './config/typeorm.config';
-import { UsersModule } from './users/users.module';
-import { redisConfig } from './config/redis.config';
 import { RedisModule } from './redis/redis.module';
 import { HealthModule } from './health/health.module';
+import { AuthModule } from './auth/auth.module';
+
+import { jwtConfig } from './config/jwt.config';
+import { redisConfig } from './config/redis.config';
+import { databaseConfig } from './config/database.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      load: [databaseConfig, redisConfig],
+      load: [databaseConfig, redisConfig, jwtConfig],
       validationSchema: validateEnvConfig,
     }),
 
@@ -24,9 +26,9 @@ import { HealthModule } from './health/health.module';
       useFactory: getTypeOrmConfig,
     }),
 
-    UsersModule,
     RedisModule,
     HealthModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
