@@ -45,7 +45,7 @@ export class RegisterService {
 
     await this.userRepository.save(user);
 
-    const verificationCode = await this.emailVerificationService.createCode(
+    const verificationCode = await this.emailVerificationService.createToken(
       user.id,
     );
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { createHash, randomInt, timingSafeEqual } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 
 import { RedisService } from 'src/redis/redis.service';
 
@@ -9,54 +9,33 @@ export class EmailVerificationService {
 
   constructor(private readonly redisService: RedisService) {}
 
-  async createCode(userId: string): Promise<string> {
-    const code = randomInt(100000, 1000000).toString();
+  async createToken(userId: string): Promise<string> {
+    const token = randomBytes(32).toString('hex');
 
-    const codeHash = this.hash(code);
-
-    await this.redisService.getClient().set(this.getKey(userId), codeHash, {
+    await this.redisService.getClient().set(this.getKey(token), userId, {
       EX: this.expiration,
     });
 
-    return code;
+    return token;
   }
 
-  async verifyCode(userId: string, code: string): Promise<boolean> {
-    const storedHash = await this.redisService
-      .getClient()
-      .get(this.getKey(userId));
+  async verifyToken(token: string): Promise<string | null> {
+    const userId = await this.redisService.getClient().get(this.getKey(token));
 
-    if (!storedHash) {
-      return false;
+    if (!userId) {
+      return null;
     }
 
-    const codeHash = this.hash(code);
+    await this.deleteToken(token);
 
-    const codeBuffer = Buffer.from(codeHash, 'hex');
-    const storedBuffer = Buffer.from(storedHash, 'hex');
-
-    if (codeBuffer.length !== storedBuffer.length) {
-      return false;
-    }
-
-    const isValid = timingSafeEqual(codeBuffer, storedBuffer);
-
-    if (isValid) {
-      await this.deleteCode(userId);
-    }
-
-    return isValid;
+    return userId;
   }
 
-  async deleteCode(userId: string): Promise<void> {
-    await this.redisService.getClient().del(this.getKey(userId));
+  private async deleteToken(token: string): Promise<void> {
+    await this.redisService.getClient().del(this.getKey(token));
   }
 
-  private hash(value: string): string {
-    return createHash('sha256').update(value).digest('hex');
-  }
-
-  private getKey(userId: string): string {
-    return `email-verification:${userId}`;
+  private getKey(token: string): string {
+    return `email-verification:${token}`;
   }
 }
