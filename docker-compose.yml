@@ -1,24 +1,27 @@
 services:
   mysql:
     image: mysql:8.4
-    container_name: ecommerce-mysql
+    container_name: e-commercial-mysql
     restart: unless-stopped
+
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ecommerce
-      MYSQL_USER: ecommerce
-      MYSQL_PASSWORD: ecommerce
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+
     ports:
-      - '3306:3306'
+      - '${DATABASE_PORT}:3306'
+
     volumes:
       - mysql_data:/var/lib/mysql
 
   redis:
     image: redis:7-alpine
-    container_name: ecommerce-redis
+    container_name: e-commercial-redis
     restart: unless-stopped
+
     ports:
       - '6379:6379'
+
     volumes:
       - redis_data:/data
 
