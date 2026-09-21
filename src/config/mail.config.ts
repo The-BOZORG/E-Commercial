@@ -6,7 +6,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/adapters/ejs.adapter';
 export function mailConfig(configService: ConfigService): MailerOptions {
   return {
     transport: {
-      host: configService.getOrThrow<string>('host.smtp'),
+      host: configService.getOrThrow<string>('smtp.host'),
       port: 587,
       secure: false,
       auth: {

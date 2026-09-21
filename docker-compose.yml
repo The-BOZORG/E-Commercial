@@ -1,7 +1,28 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: e-commercial-api
+
+    restart: unless-stopped
+
+    ports:
+      - '3000:3000'
+
+    env_file:
+      - .env
+
+    depends_on:
+      - mysql
+      - redis
+
   mysql:
     image: mysql:8.4
+
     container_name: e-commercial-mysql
+
     restart: unless-stopped
 
     environment:
@@ -9,14 +30,16 @@ services:
       MYSQL_DATABASE: ${DATABASE_NAME}
 
     ports:
-      - '${DATABASE_PORT}:3306'
+      - '3307:3306'
 
     volumes:
       - mysql_data:/var/lib/mysql
 
   redis:
     image: redis:7-alpine
+
     container_name: e-commercial-redis
+
     restart: unless-stopped
 
     ports:

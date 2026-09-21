@@ -14,19 +14,32 @@ export class EmailVerificationService {
 
     const codeHash = this.hash(code);
 
-    await this.redisService.set(this.getKey(userId), codeHash, this.expiration);
+    await this.redisService.getClient().set(this.getKey(userId), codeHash, {
+      EX: this.expiration,
+    });
 
     return code;
   }
 
   async verifyCode(userId: string, code: string): Promise<boolean> {
-    const storedHash = await this.redisService.get(this.getKey(userId));
+    const storedHash = await this.redisService
+      .getClient()
+      .get(this.getKey(userId));
 
     if (!storedHash) {
       return false;
     }
 
-    const isValid = this.compare(code, storedHash);
+    const codeHash = this.hash(code);
+
+    const codeBuffer = Buffer.from(codeHash, 'hex');
+    const storedBuffer = Buffer.from(storedHash, 'hex');
+
+    if (codeBuffer.length !== storedBuffer.length) {
+      return false;
+    }
+
+    const isValid = timingSafeEqual(codeBuffer, storedBuffer);
 
     if (isValid) {
       await this.deleteCode(userId);
@@ -36,24 +49,11 @@ export class EmailVerificationService {
   }
 
   async deleteCode(userId: string): Promise<void> {
-    await this.redisService.del(this.getKey(userId));
+    await this.redisService.getClient().del(this.getKey(userId));
   }
 
   private hash(value: string): string {
     return createHash('sha256').update(value).digest('hex');
-  }
-
-  private compare(value: string, hashedValue: string): boolean {
-    const valueHash = this.hash(value);
-
-    const valueBuffer = Buffer.from(valueHash, 'hex');
-    const hashedValueBuffer = Buffer.from(hashedValue, 'hex');
-
-    if (valueBuffer.length !== hashedValueBuffer.length) {
-      return false;
-    }
-
-    return timingSafeEqual(valueBuffer, hashedValueBuffer);
   }
 
   private getKey(userId: string): string {

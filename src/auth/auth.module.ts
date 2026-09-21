@@ -5,13 +5,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { getJwtConfig } from 'src/config/jwt.factory.config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
-import { SessionService } from './providers/session.provider';
 import { TokenService } from './providers/token.provider';
 import { PasswordHashService } from './providers/password-hash.sprovider';
 import { EmailVerificationService } from './providers/email-verify.provider';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { RegisterService } from './providers/register.provider';
+import { SessionService } from './providers/session.provider';
 
 @Module({
   imports: [

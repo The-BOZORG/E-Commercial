@@ -1,47 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
 
 import { RedisService } from 'src/redis/redis.service';
 import { Session } from '../interface/interface.auth';
 
 @Injectable()
 export class SessionService {
-  private readonly sessionExpiration = 60 * 60 * 24 * 7; // 7 days
+  private readonly sessionExpiration = 60 * 60 * 24 * 7;
 
   constructor(private readonly redisService: RedisService) {}
 
-  async createSession(userId: string, refreshToken: string): Promise<string> {
-    const sessionId = randomUUID();
-
+  async createSession(
+    sessionId: string,
+    userId: string,
+    refreshToken: string,
+  ): Promise<void> {
     const session: Session = {
       userId,
       refreshToken,
     };
 
-    await this.redisService.set(
-      this.getSessionKey(sessionId),
-      JSON.stringify(session),
-      this.sessionExpiration,
-    );
-
-    return sessionId;
+    await this.redisService
+      .getClient()
+      .set(`session:${sessionId}`, JSON.stringify(session), {
+        EX: this.sessionExpiration,
+      });
   }
 
   async getSession(sessionId: string): Promise<Session | null> {
-    const session = await this.redisService.get(this.getSessionKey(sessionId));
+    const data = await this.redisService
+      .getClient()
+      .get(`session:${sessionId}`);
 
-    if (!session) {
+    if (!data) {
       return null;
     }
 
-    return JSON.parse(session) as Session;
+    return JSON.parse(data) as Session;
   }
 
   async deleteSession(sessionId: string): Promise<void> {
-    await this.redisService.del(this.getSessionKey(sessionId));
-  }
-
-  private getSessionKey(sessionId: string): string {
-    return `session:${sessionId}`;
+    await this.redisService.getClient().del(`session:${sessionId}`);
   }
 }
