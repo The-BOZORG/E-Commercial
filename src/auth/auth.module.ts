@@ -8,7 +8,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { SessionService } from './providers/session.provider';
 import { TokenService } from './providers/token.provider';
-import { TokenHashService } from './providers/token-hash.provider';
 
 @Module({
   imports: [
@@ -21,12 +20,6 @@ import { TokenHashService } from './providers/token-hash.provider';
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    SessionService,
-    TokenService,
-    TokenHashService,
-  ],
+  providers: [AuthService, JwtStrategy, SessionService, TokenService],
 })
 export class AuthModule {}

@@ -2,11 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
 import { RedisService } from 'src/redis/redis.service';
-
-interface Session {
-  userId: string;
-  refreshTokenHash: string;
-}
+import { Session } from '../interface/interface.auth';
 
 @Injectable()
 export class SessionService {
@@ -14,15 +10,12 @@ export class SessionService {
 
   constructor(private readonly redisService: RedisService) {}
 
-  async createSession(
-    userId: string,
-    refreshTokenHash: string,
-  ): Promise<string> {
+  async createSession(userId: string, refreshToken: string): Promise<string> {
     const sessionId = randomUUID();
 
     const session: Session = {
       userId,
-      refreshTokenHash,
+      refreshToken,
     };
 
     await this.redisService.set(

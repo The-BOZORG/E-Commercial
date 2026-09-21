@@ -11,13 +11,15 @@ import { jwtConfig } from './config/jwt.config';
 import { redisConfig } from './config/redis.config';
 import { databaseConfig } from './config/database.config';
 import { cookieConfig } from './config/cookie.config';
+import { MailModule } from './mail/mail.module';
+import { SMTP } from './config/smtp.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      load: [databaseConfig, redisConfig, jwtConfig, cookieConfig],
+      load: [databaseConfig, redisConfig, jwtConfig, cookieConfig, SMTP],
       validationSchema: validateEnvConfig,
     }),
 
@@ -30,6 +32,7 @@ import { cookieConfig } from './config/cookie.config';
     RedisModule,
     HealthModule,
     AuthModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],

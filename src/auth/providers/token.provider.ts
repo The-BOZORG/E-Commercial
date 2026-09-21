@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-
-interface RefreshTokenPayload {
-  sub: string;
-  sid: string;
-}
+import { RefreshTokenPayload } from '../interface/interface.auth';
 
 @Injectable()
 export class TokenService {
