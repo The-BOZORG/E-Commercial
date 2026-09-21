@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -9,6 +8,10 @@ import { PassportModule } from '@nestjs/passport';
 import { SessionService } from './providers/session.provider';
 import { TokenService } from './providers/token.provider';
 import { PasswordHashService } from './providers/password-hash.sprovider';
+import { EmailVerificationService } from './providers/email-verify.provider';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entity/user.entity';
+import { RegisterService } from './providers/register.provider';
 
 @Module({
   imports: [
@@ -19,14 +22,16 @@ import { PasswordHashService } from './providers/password-hash.sprovider';
       inject: [ConfigService],
       useFactory: getJwtConfig,
     }),
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [AuthController],
   providers: [
-    AuthService,
     JwtStrategy,
     SessionService,
     TokenService,
     PasswordHashService,
+    EmailVerificationService,
+    RegisterService,
   ],
 })
 export class AuthModule {}
