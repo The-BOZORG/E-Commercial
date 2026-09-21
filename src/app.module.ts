@@ -10,13 +10,14 @@ import { AuthModule } from './auth/auth.module';
 import { jwtConfig } from './config/jwt.config';
 import { redisConfig } from './config/redis.config';
 import { databaseConfig } from './config/database.config';
+import { cookieConfig } from './config/cookie.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      load: [databaseConfig, redisConfig, jwtConfig],
+      load: [databaseConfig, redisConfig, jwtConfig, cookieConfig],
       validationSchema: validateEnvConfig,
     }),
 
