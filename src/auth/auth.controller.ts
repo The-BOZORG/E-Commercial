@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  Res,
+  UseInterceptors,
+} from '@nestjs/common';
 
 import type { Response, Request } from 'express';
 
@@ -9,6 +18,9 @@ import { LoginDto } from './dto/login.dto';
 import { LoginService } from './providers/login.provider';
 import { RefreshTokenService } from './providers/refresh-token.provider';
 import { LogoutService } from './providers/logout.provider';
+import { AuthResponseInterceptor } from './interceptor/auth-response.interceptor';
+
+@UseInterceptors(AuthResponseInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(
