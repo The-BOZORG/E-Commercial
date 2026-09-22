@@ -49,7 +49,11 @@ export class RegisterService {
       user.id,
     );
 
-    await this.emailService.sendVerificationCode(user.email, verificationCode);
+    await this.emailService.sendVerificationEmail(
+      user.email,
+      verificationCode,
+      user.firstName,
+    );
 
     return {
       message: 'Registration successful. Verification code sent to your email.',

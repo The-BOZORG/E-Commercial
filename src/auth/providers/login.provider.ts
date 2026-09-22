@@ -7,7 +7,6 @@ import { TokenService } from './token.provider';
 import { SessionService } from './session.provider';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginDto } from '../dto/login.dto';
-import { ConfigService } from '@nestjs/config';
 import { CookieService } from './cookie.provider';
 import { Response } from 'express';
 
@@ -21,7 +20,6 @@ export class LoginService {
     private readonly tokenService: TokenService,
     private readonly sessionService: SessionService,
     private readonly cookieService: CookieService,
-    private readonly configService: ConfigService,
   ) {}
 
   async login(loginDto: LoginDto, response: Response) {
