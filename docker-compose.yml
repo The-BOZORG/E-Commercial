@@ -18,9 +18,11 @@ services:
       - mysql
       - redis
 
-    command: >
-      sh -c "pnpm run migration:run &&
-            pnpm run start:dev"
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+    command: sh -c "pnpm run migration:run && pnpm run start:dev"
 
   mysql:
     image: mysql:8.4

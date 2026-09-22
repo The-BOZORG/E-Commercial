@@ -7,7 +7,7 @@ export const cookieConfig = registerAs('cookie', () => ({
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax' as const,
-    path: '/auth',
+    path: '/api/v1/auth',
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 }));

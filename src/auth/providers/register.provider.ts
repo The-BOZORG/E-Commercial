@@ -45,14 +45,16 @@ export class RegisterService {
 
     await this.userRepository.save(user);
 
-    const verificationCode = await this.emailVerificationService.createToken(
+    const verificationToken = await this.emailVerificationService.createToken(
       user.id,
     );
 
+    const verificationUrl = `${process.env.APP_URL}/auth/verify-email?token=${verificationToken}`;
+
     await this.emailService.sendVerificationEmail(
       user.email,
-      verificationCode,
       user.firstName,
+      verificationUrl,
     );
 
     return {
