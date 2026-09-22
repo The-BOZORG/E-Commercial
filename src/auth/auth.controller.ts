@@ -8,6 +8,7 @@ import { VerifyEmailService } from './providers/verify-email.provider';
 import { LoginDto } from './dto/login.dto';
 import { LoginService } from './providers/login.provider';
 import { RefreshTokenService } from './providers/refresh-token.provider';
+import { LogoutService } from './providers/logout.provider';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -15,6 +16,7 @@ export class AuthController {
     private readonly verifyEmailService: VerifyEmailService,
     private readonly loginService: LoginService,
     private readonly refreshTokenService: RefreshTokenService,
+    private readonly logoutService: LogoutService,
   ) {}
 
   @Post('register')
@@ -38,5 +40,13 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Req() request: Request) {
     return this.refreshTokenService.refresh(request);
+  }
+
+  @Post('logout')
+  async logout(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.logoutService.logout(request, response);
   }
 }

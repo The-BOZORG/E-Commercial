@@ -16,6 +16,7 @@ import { VerifyEmailService } from './providers/verify-email.provider';
 import { LoginService } from './providers/login.provider';
 import { CookieService } from './providers/cookie.provider';
 import { RefreshTokenService } from './providers/refresh-token.provider';
+import { LogoutService } from './providers/logout.provider';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { RefreshTokenService } from './providers/refresh-token.provider';
     LoginService,
     CookieService,
     RefreshTokenService,
+    LogoutService,
   ],
 })
 export class AuthModule {}
