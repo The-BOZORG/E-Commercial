@@ -12,6 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { RegisterService } from './providers/register.provider';
 import { SessionService } from './providers/session.provider';
+import { VerifyEmailService } from './providers/verify-email.provider';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { SessionService } from './providers/session.provider';
     PasswordHashService,
     EmailVerificationService,
     RegisterService,
+    VerifyEmailService,
   ],
 })
 export class AuthModule {}
