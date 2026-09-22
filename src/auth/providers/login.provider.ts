@@ -22,29 +22,25 @@ export class LoginService {
     private readonly cookieService: CookieService,
   ) {}
 
-  async login(loginDto: LoginDto, response: Response) {
+  public async login(loginDto: LoginDto, response: Response) {
     const user = await this.userRepository.findOne({
       where: {
         email: loginDto.email,
       },
     });
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    if (!user) throw new UnauthorizedException('Invalid credentials');
 
     const isPasswordValid = await this.passwordHashService.compare(
       loginDto.password,
       user.password,
     );
 
-    if (!isPasswordValid) {
+    if (!isPasswordValid)
       throw new UnauthorizedException('Invalid credentials');
-    }
 
-    if (!user.isEmailVerified) {
+    if (!user.isEmailVerified)
       throw new UnauthorizedException('Please verify your email first');
-    }
 
     const sessionId = randomUUID();
 

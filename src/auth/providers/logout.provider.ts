@@ -13,7 +13,7 @@ export class LogoutService {
     private readonly sessionService: SessionService,
   ) {}
 
-  async logout(
+  public async logout(
     request: Request,
     response: Response,
   ): Promise<{ message: string }> {

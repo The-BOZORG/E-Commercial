@@ -22,7 +22,7 @@ export class RegisterService {
     private readonly emailService: EmailService,
   ) {}
 
-  async register(registerDto: RegisterDto) {
+  public async register(registerDto: RegisterDto) {
     const existingUser = await this.userRepository.findOne({
       where: {
         email: registerDto.email,

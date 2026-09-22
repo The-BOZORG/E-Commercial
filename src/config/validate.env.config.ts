@@ -15,4 +15,7 @@ export default Joi.object({
   JWT_ACCESS_EXPIRATION: Joi.string().required(),
   JWT_REFRESH_SECRET: Joi.string().required(),
   JWT_REFRESH_EXPIRATION: Joi.string().required(),
+  MAIL_HOST: Joi.string().required(),
+  SMPT_USERNAME: Joi.string().required(),
+  SMPT_PASSWORD: Joi.string().required(),
 });

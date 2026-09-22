@@ -13,7 +13,7 @@ export class RefreshTokenService {
     private readonly sessionService: SessionService,
   ) {}
 
-  async refresh(request: Request) {
+  public async refresh(request: Request) {
     const refreshToken = this.cookieService.getRefreshToken(request);
 
     let payload: RefreshTokenPayload;

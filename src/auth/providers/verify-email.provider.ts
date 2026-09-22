@@ -18,7 +18,7 @@ export class VerifyEmailService {
     private readonly emailVerificationService: EmailVerificationService,
   ) {}
 
-  async verify(token: string) {
+  public async verify(token: string) {
     if (!token) throw new BadRequestException('Verification token is required');
 
     const userId = await this.emailVerificationService.verifyToken(token);
