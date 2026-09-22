@@ -7,6 +7,9 @@ import { TokenService } from './token.provider';
 import { SessionService } from './session.provider';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginDto } from '../dto/login.dto';
+import { ConfigService } from '@nestjs/config';
+import { CookieService } from './cookie.provider';
+import { Response } from 'express';
 
 @Injectable()
 export class LoginService {
@@ -17,27 +20,33 @@ export class LoginService {
     private readonly passwordHashService: PasswordHashService,
     private readonly tokenService: TokenService,
     private readonly sessionService: SessionService,
+    private readonly cookieService: CookieService,
+    private readonly configService: ConfigService,
   ) {}
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto, response: Response) {
     const user = await this.userRepository.findOne({
       where: {
         email: loginDto.email,
       },
     });
 
-    if (!user) throw new UnauthorizedException('Invalid credentials');
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
     const isPasswordValid = await this.passwordHashService.compare(
       loginDto.password,
       user.password,
     );
 
-    if (!isPasswordValid)
+    if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
+    }
 
-    if (!user.isEmailVerified)
+    if (!user.isEmailVerified) {
       throw new UnauthorizedException('Please verify your email first');
+    }
 
     const sessionId = randomUUID();
 
@@ -50,13 +59,15 @@ export class LoginService {
 
     await this.sessionService.createSession(sessionId, user.id, refreshToken);
 
+    this.cookieService.setRefreshToken(response, refreshToken);
+
     return {
       accessToken,
       user: {
         id: user.id,
         firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
-        role: user.role,
       },
     };
   }

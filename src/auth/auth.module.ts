@@ -13,6 +13,9 @@ import { User } from './entity/user.entity';
 import { RegisterService } from './providers/register.provider';
 import { SessionService } from './providers/session.provider';
 import { VerifyEmailService } from './providers/verify-email.provider';
+import { LoginService } from './providers/login.provider';
+import { CookieService } from './providers/cookie.provider';
+import { RefreshTokenService } from './providers/refresh-token.provider';
 
 @Module({
   imports: [
@@ -34,6 +37,9 @@ import { VerifyEmailService } from './providers/verify-email.provider';
     EmailVerificationService,
     RegisterService,
     VerifyEmailService,
+    LoginService,
+    CookieService,
+    RefreshTokenService,
   ],
 })
 export class AuthModule {}
