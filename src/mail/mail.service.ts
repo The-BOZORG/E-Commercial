@@ -5,13 +5,18 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class EmailService {
   constructor(private readonly mailer: MailerService) {}
 
-  async sendVerificationCode(email: string, code: string): Promise<void> {
+  async sendVerificationEmail(
+    email: string,
+    firstName: string,
+    verificationUrl: string,
+  ): Promise<void> {
     await this.mailer.sendMail({
       to: email,
-      subject: 'Email Verification',
+      subject: 'Verify your email',
       template: 'verification',
       context: {
-        code,
+        firstName,
+        verificationUrl,
       },
     });
   }
