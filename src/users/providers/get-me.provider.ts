@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { User } from '../entity/user.entity';
+import { UserResponse } from '../interface/users.interface';
 
 @Injectable()
 export class GetMeProvider {
@@ -11,23 +12,24 @@ export class GetMeProvider {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  public async execute(userId: string) {
+  public async execute(userId: string): Promise<UserResponse> {
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 
     if (!user) throw new NotFoundException('User not found');
 
-    return {
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
+    return user;
   }
 }

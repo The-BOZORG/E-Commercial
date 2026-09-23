@@ -1,8 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -11,6 +13,8 @@ import { JwtAuthGuard } from 'src/shared/guards/auth.guard';
 import { Authorized } from 'src/shared/decorator/authorized.decorator';
 import { UsersQueryDto } from './dto/users-query.dto';
 import { GetUsersProvider } from './providers/get-all.provider';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserProvider } from './providers/update.provider';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -18,6 +22,7 @@ export class UsersController {
   constructor(
     private readonly getMeProvider: GetMeProvider,
     private readonly getUsersProvider: GetUsersProvider,
+    private readonly updateUserProvider: UpdateUserProvider,
   ) {}
 
   @Get('me')
@@ -30,5 +35,14 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   getUsers(@Query() query: UsersQueryDto) {
     return this.getUsersProvider.getAll(query);
+  }
+
+  @Patch('update')
+  @HttpCode(HttpStatus.OK)
+  updateMe(
+    @Authorized('userId') userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.updateUserProvider.updateUser(userId, updateUserDto);
   }
 }
