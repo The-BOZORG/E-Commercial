@@ -7,6 +7,7 @@ import { UpdateUserProvider } from './providers/update.provider';
 import { GetUsersProvider } from './providers/get-all.provider';
 import { AuthModule } from 'src/auth/auth.module';
 import { UpdatePasswordProvider } from './providers/update-password.provider';
+import { DeleteUserProvider } from './providers/delete.provider';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), AuthModule],
@@ -16,6 +17,7 @@ import { UpdatePasswordProvider } from './providers/update-password.provider';
     GetUsersProvider,
     UpdateUserProvider,
     UpdatePasswordProvider,
+    DeleteUserProvider,
   ],
   exports: [TypeOrmModule],
 })

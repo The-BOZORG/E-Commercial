@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -17,6 +18,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserProvider } from './providers/update.provider';
 import { UpdatePasswordDto } from './dto/user-password.dto';
 import { UpdatePasswordProvider } from './providers/update-password.provider';
+import { DeleteUserProvider } from './providers/delete.provider';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -26,6 +28,7 @@ export class UsersController {
     private readonly getUsersProvider: GetUsersProvider,
     private readonly updateUserProvider: UpdateUserProvider,
     private readonly updatePasswordProvider: UpdatePasswordProvider,
+    private readonly deleteUserProvider: DeleteUserProvider,
   ) {}
 
   @Get('me')
@@ -59,5 +62,11 @@ export class UsersController {
       userId,
       updatePasswordDto,
     );
+  }
+
+  @Delete('me')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  deleteMe(@Authorized('userId') userId: string): Promise<void> {
+    return this.deleteUserProvider.delete(userId);
   }
 }
