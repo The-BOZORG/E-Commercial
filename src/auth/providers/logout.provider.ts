@@ -13,10 +13,7 @@ export class LogoutService {
     private readonly sessionService: SessionService,
   ) {}
 
-  public async logout(
-    request: Request,
-    response: Response,
-  ): Promise<{ message: string }> {
+  public async logout(request: Request, response: Response) {
     const refreshToken = this.cookieService.getRefreshToken(request);
 
     let payload: RefreshTokenPayload;

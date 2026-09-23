@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { User } from '../entity/user.entity';
+import { User } from '../../users/entity/user.entity';
 import { Repository } from 'typeorm';
 import { PasswordHashService } from './password-hash.sprovider';
 import { TokenService } from './token.provider';

@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { User } from '../entity/user.entity';
+import { User } from '../../users/entity/user.entity';
 import { PasswordHashService } from './password-hash.sprovider';
 import { EmailVerificationService } from './email-verify.provider';
 import { EmailService } from 'src/mail/mail.service';

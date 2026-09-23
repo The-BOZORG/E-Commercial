@@ -13,6 +13,7 @@ import { databaseConfig } from './config/database.config';
 import { cookieConfig } from './config/cookie.config';
 import { MailModule } from './mail/mail.module';
 import { SMTP } from './config/smtp.config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { SMTP } from './config/smtp.config';
     HealthModule,
     AuthModule,
     MailModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
