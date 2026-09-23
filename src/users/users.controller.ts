@@ -40,7 +40,7 @@ export class UsersController {
     return this.getMeProvider.execute(userId);
   }
 
-  @Get('all')
+  @Get('all') // GET /users?page=2&limit=10
   @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.OK)
   getUsers(@Query() query: UsersQueryDto) {

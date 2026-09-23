@@ -15,6 +15,8 @@ import { MailModule } from './mail/mail.module';
 import { SMTP } from './config/smtp.config';
 import { UsersModule } from './users/users.module';
 import { appConfig } from './config/app.config';
+import { ProductModule } from './product/product.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { appConfig } from './config/app.config';
     AuthModule,
     MailModule,
     UsersModule,
+    ProductModule,
+    OrderModule,
   ],
   controllers: [],
   providers: [],

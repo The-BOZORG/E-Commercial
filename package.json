@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.3.7",
-    "@nestjs/bullmq": "^12.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^12.0.0",
     "@nestjs/core": "^11.0.1",
@@ -37,7 +36,6 @@
     "@nestjs/terminus": "^12.0.0",
     "@nestjs/typeorm": "^12.0.1",
     "argon2": "^0.45.1",
-    "bullmq": "^6.3.8",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "cookie-parser": "^1.4.7",

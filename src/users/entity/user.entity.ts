@@ -2,11 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserRole } from '../../auth/enum/enum.auth';
 import { Exclude } from 'class-transformer';
+import { Product } from '../../product/entity/product.entity';
 
 @Entity('users')
 export class User {
@@ -57,6 +59,9 @@ export class User {
     default: false,
   })
   isEmailVerified: boolean;
+
+  @OneToMany(() => Product, (product) => product.createdBy)
+  products: Product[];
 
   @CreateDateColumn({
     type: 'timestamp',
