@@ -20,7 +20,7 @@ export class UpdatePasswordProvider {
   public async updatePassword(
     userId: string,
     updatePasswordDto: UpdatePasswordDto,
-  ): Promise<void> {
+  ): Promise<{ message: string }> {
     const { currentPassword, newPassword } = updatePasswordDto;
 
     const user = await this.userRepository.findOne({
@@ -42,5 +42,9 @@ export class UpdatePasswordProvider {
     user.password = await this.passwordHashService.hash(newPassword);
 
     await this.userRepository.save(user);
+
+    return {
+      message: 'Password updated successfully',
+    };
   }
 }

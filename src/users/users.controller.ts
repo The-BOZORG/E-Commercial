@@ -57,7 +57,7 @@ export class UsersController {
   updatePassword(
     @Authorized('userId') userId: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): Promise<void> {
+  ) {
     return this.updatePasswordProvider.updatePassword(
       userId,
       updatePasswordDto,
