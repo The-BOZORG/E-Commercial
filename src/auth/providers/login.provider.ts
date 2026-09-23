@@ -44,7 +44,10 @@ export class LoginService {
 
     const sessionId = randomUUID();
 
-    const accessToken = this.tokenService.generateAccessToken(user.id);
+    const accessToken = this.tokenService.generateAccessToken(
+      user.id,
+      user.role,
+    );
 
     const refreshToken = this.tokenService.generateRefreshToken(
       user.id,
@@ -62,6 +65,7 @@ export class LoginService {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        role: user.role,
       },
     };
   }

@@ -1,5 +1,8 @@
+import { UserRole } from '../enum/enum.auth';
+
 export interface JwtPayload {
   sub: string;
+  role: UserRole;
 }
 
 export interface RefreshTokenPayload {

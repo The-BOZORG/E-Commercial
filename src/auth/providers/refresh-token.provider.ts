@@ -4,10 +4,16 @@ import { CookieService } from './cookie.provider';
 import { TokenService } from './token.provider';
 import { SessionService } from './session.provider';
 import { RefreshTokenPayload } from '../interface/interface.auth';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entity/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class RefreshTokenService {
   constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+
     private readonly cookieService: CookieService,
     private readonly tokenService: TokenService,
     private readonly sessionService: SessionService,
@@ -34,7 +40,22 @@ export class RefreshTokenService {
     if (session.refreshToken !== refreshToken)
       throw new UnauthorizedException('Invalid refresh token');
 
-    const accessToken = this.tokenService.generateAccessToken(payload.sub);
+    const user = await this.userRepository.findOne({
+      where: {
+        id: payload.sub,
+      },
+      select: {
+        id: true,
+        role: true,
+      },
+    });
+
+    if (!user) throw new UnauthorizedException('User not found');
+
+    const accessToken = this.tokenService.generateAccessToken(
+      user.id,
+      user.role,
+    );
 
     return {
       accessToken,

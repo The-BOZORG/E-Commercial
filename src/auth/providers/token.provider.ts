@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenPayload } from '../interface/interface.auth';
+import { UserRole } from '../enum/enum.auth';
 
 @Injectable()
 export class TokenService {
@@ -10,9 +11,10 @@ export class TokenService {
     private readonly configService: ConfigService,
   ) {}
 
-  generateAccessToken(userId: string): string {
+  generateAccessToken(userId: string, role: UserRole): string {
     return this.jwtService.sign({
       sub: userId,
+      role,
     });
   }
 
