@@ -64,7 +64,7 @@ export class UsersController {
     );
   }
 
-  @Delete('me')
+  @Delete('delete')
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteMe(@Authorized('userId') userId: string): Promise<void> {
     return this.deleteUserProvider.delete(userId);
