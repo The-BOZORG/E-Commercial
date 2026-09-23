@@ -42,5 +42,6 @@ import { UsersModule } from 'src/users/users.module';
     RefreshTokenService,
     LogoutService,
   ],
+  exports: [PasswordHashService],
 })
 export class AuthModule {}

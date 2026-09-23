@@ -15,6 +15,8 @@ import { UsersQueryDto } from './dto/users-query.dto';
 import { GetUsersProvider } from './providers/get-all.provider';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserProvider } from './providers/update.provider';
+import { UpdatePasswordDto } from './dto/user-password.dto';
+import { UpdatePasswordProvider } from './providers/update-password.provider';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -23,6 +25,7 @@ export class UsersController {
     private readonly getMeProvider: GetMeProvider,
     private readonly getUsersProvider: GetUsersProvider,
     private readonly updateUserProvider: UpdateUserProvider,
+    private readonly updatePasswordProvider: UpdatePasswordProvider,
   ) {}
 
   @Get('me')
@@ -44,5 +47,17 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.updateUserProvider.updateUser(userId, updateUserDto);
+  }
+
+  @Patch('password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  updatePassword(
+    @Authorized('userId') userId: string,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ): Promise<void> {
+    return this.updatePasswordProvider.updatePassword(
+      userId,
+      updatePasswordDto,
+    );
   }
 }
