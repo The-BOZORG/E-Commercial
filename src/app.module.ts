@@ -14,13 +14,21 @@ import { cookieConfig } from './config/cookie.config';
 import { MailModule } from './mail/mail.module';
 import { SMTP } from './config/smtp.config';
 import { UsersModule } from './users/users.module';
+import { appConfig } from './config/app.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      load: [databaseConfig, redisConfig, jwtConfig, cookieConfig, SMTP],
+      load: [
+        databaseConfig,
+        redisConfig,
+        jwtConfig,
+        cookieConfig,
+        SMTP,
+        appConfig,
+      ],
       validationSchema: validateEnvConfig,
     }),
 

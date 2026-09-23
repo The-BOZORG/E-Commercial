@@ -8,6 +8,8 @@ import { EmailVerificationService } from './email-verify.provider';
 import { EmailService } from 'src/mail/mail.service';
 
 import { RegisterDto } from '../dto/register.dto';
+import { ConfigService } from '@nestjs/config';
+import { UserRole } from '../enum/enum.auth';
 
 @Injectable()
 export class RegisterService {
@@ -20,6 +22,8 @@ export class RegisterService {
     private readonly emailVerificationService: EmailVerificationService,
 
     private readonly emailService: EmailService,
+
+    private readonly configService: ConfigService,
   ) {}
 
   public async register(registerDto: RegisterDto) {
@@ -35,11 +39,19 @@ export class RegisterService {
       registerDto.password,
     );
 
+    const adminEmails =
+      this.configService.getOrThrow<string[]>('app.adminEmails');
+
+    const role = adminEmails.includes(registerDto.email.trim().toLowerCase())
+      ? UserRole.ADMIN
+      : UserRole.USER;
+
     const user = this.userRepository.create({
       firstName: registerDto.firstName,
       lastName: registerDto.lastName,
       email: registerDto.email,
       password: passwordHash,
+      role,
       isEmailVerified: false,
     });
 
@@ -49,7 +61,9 @@ export class RegisterService {
       user.id,
     );
 
-    const verificationUrl = `${process.env.APP_URL}/auth/verify-email?token=${verificationToken}`;
+    const verificationUrl =
+      this.configService.getOrThrow<string>('app.appUrl') +
+      `/auth/verify-email?token=${verificationToken}`;
 
     await this.emailService.sendVerificationEmail(
       user.email,

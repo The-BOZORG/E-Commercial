@@ -19,9 +19,12 @@ import { UpdateUserProvider } from './providers/update.provider';
 import { UpdatePasswordDto } from './dto/user-password.dto';
 import { UpdatePasswordProvider } from './providers/update-password.provider';
 import { DeleteUserProvider } from './providers/delete.provider';
+import { Roles } from 'src/shared/decorator/role.decorator';
+import { UserRole } from 'src/auth/enum/enum.auth';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
   constructor(
     private readonly getMeProvider: GetMeProvider,
@@ -38,6 +41,7 @@ export class UsersController {
   }
 
   @Get('all')
+  @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.OK)
   getUsers(@Query() query: UsersQueryDto) {
     return this.getUsersProvider.getAll(query);
