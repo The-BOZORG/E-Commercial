@@ -7,12 +7,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../entity/product.entity';
 import { Repository } from 'typeorm';
 import { UpdateProductDto } from '../dto/update.dto';
+import { ProductCacheService } from '../services/product-cache.service';
 
 @Injectable()
 export class UpdateProvider {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+
+    private readonly productCacheService: ProductCacheService,
   ) {}
 
   public async update(
@@ -36,6 +39,8 @@ export class UpdateProvider {
       throw new ForbiddenException('You cannot update this product');
 
     Object.assign(product, updateProductDto);
+
+    await this.productCacheService.deleteProduct(productId);
 
     return this.productRepository.save(product);
   }
