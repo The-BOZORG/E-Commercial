@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -19,6 +21,9 @@ import { JwtAuthGuard } from 'src/shared/guards/auth.guard';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { UserRole } from 'src/auth/enum/enum.auth';
+import { UpdateProductDto } from './dto/update.dto';
+import { UpdateProvider } from './providers/update.provider';
+import { DeleteProvider } from './providers/delete.provider';
 
 @Controller('product')
 export class ProductsController {
@@ -26,6 +31,8 @@ export class ProductsController {
     private readonly findOneProvider: FindOneProvider,
     private readonly findAllProvider: FindAllProvider,
     private readonly createProvider: CreateProvider,
+    private readonly updateProvider: UpdateProvider,
+    private readonly deleteProvider: DeleteProvider,
   ) {}
 
   @Get(':id')
@@ -51,5 +58,19 @@ export class ProductsController {
     @Authorized('userId') userId: string,
   ) {
     return this.createProvider.create(createProductDto, userId);
+  }
+
+  @Patch('update/:id')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+    return this.updateProvider.update(id, updateProductDto);
+  }
+
+  @Delete('delete/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@Param('id') id: string, @Authorized('userId') userId: string) {
+    return this.deleteProvider.delete(id, userId);
   }
 }
