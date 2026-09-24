@@ -14,10 +14,10 @@ export class DeleteProvider {
     private readonly productRepository: Repository<Product>,
   ) {}
 
-  public async delete(id: string, userId: string): Promise<void> {
+  public async delete(productId: string, userId: string): Promise<void> {
     const product = await this.productRepository.findOne({
       where: {
-        id,
+        id: productId,
       },
       relations: {
         createdBy: true,

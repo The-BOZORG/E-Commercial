@@ -12,12 +12,12 @@ export class UpdateProvider {
   ) {}
 
   public async update(
-    id: string,
+    productId: string,
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
     const product = await this.productRepository.findOne({
       where: {
-        id,
+        id: productId,
       },
     });
 

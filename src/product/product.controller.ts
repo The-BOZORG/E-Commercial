@@ -37,8 +37,8 @@ export class ProductsController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
-    return this.findOneProvider.findOne(id);
+  findOne(@Param('id') productId: string) {
+    return this.findOneProvider.findOne(productId);
   }
 
   @Get('all')
@@ -64,13 +64,16 @@ export class ProductsController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.updateProvider.update(id, updateProductDto);
+  update(
+    @Param('id') productId: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    return this.updateProvider.update(productId, updateProductDto);
   }
 
   @Delete('delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id') id: string, @Authorized('userId') userId: string) {
-    return this.deleteProvider.delete(id, userId);
+  delete(@Param('id') productId: string, @Authorized('userId') userId: string) {
+    return this.deleteProvider.delete(productId, userId);
   }
 }
