@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -16,6 +17,8 @@ import { JwtAuthGuard } from 'src/shared/guards/auth.guard';
 import { GetCartProvider } from './providers/get.provider';
 import { UpdateCartItemDto } from './dto/cart-update.dto';
 import { UpdateItemProvider } from './providers/update.provider';
+import { RemoveItemProvider } from './providers/delete.provider';
+import { ClearCartProvider } from './providers/clear.provider';
 
 @Controller('cart')
 @UseGuards(JwtAuthGuard)
@@ -24,6 +27,8 @@ export class CartController {
     private readonly addItemProvider: AddItemProvider,
     private readonly getCartProvider: GetCartProvider,
     private readonly updateItemProvider: UpdateItemProvider,
+    private readonly removeItemProvider: RemoveItemProvider,
+    private readonly clearCartProvider: ClearCartProvider,
   ) {}
 
   @Get('all')
@@ -53,5 +58,20 @@ export class CartController {
       updateCartItemDto,
       userId,
     );
+  }
+
+  @Delete('items/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  removeItem(
+    @Param('id') cartItemId: string,
+    @Authorized('userId') userId: string,
+  ) {
+    return this.removeItemProvider.remove(cartItemId, userId);
+  }
+
+  @Delete('clear')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  clear(@Authorized('userId') userId: string) {
+    return this.clearCartProvider.clear(userId);
   }
 }
