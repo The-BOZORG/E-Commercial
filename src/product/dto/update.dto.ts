@@ -1,29 +1,30 @@
 import {
   IsBoolean,
   IsInt,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   Min,
 } from 'class-validator';
 
-export class CreateProductDto {
+export class UpdateProductDto {
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsString()
   description?: string;
 
+  @IsOptional()
   @IsNumber()
   @Min(0)
-  price: number;
+  price?: number;
 
+  @IsOptional()
   @IsInt()
   @Min(0)
-  stock: number;
+  stock?: number;
 
   @IsOptional()
   @IsBoolean()
