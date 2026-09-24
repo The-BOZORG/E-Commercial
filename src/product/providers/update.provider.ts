@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../entity/product.entity';
 import { Repository } from 'typeorm';
@@ -14,14 +18,22 @@ export class UpdateProvider {
   public async update(
     productId: string,
     updateProductDto: UpdateProductDto,
+    userId: string,
   ): Promise<Product> {
     const product = await this.productRepository.findOne({
       where: {
         id: productId,
+
+        createdBy: {
+          id: userId,
+        },
       },
     });
 
     if (!product) throw new NotFoundException('Product not found');
+
+    if (product.createdBy.id !== userId)
+      throw new ForbiddenException('You cannot update this product');
 
     Object.assign(product, updateProductDto);
 

@@ -18,9 +18,10 @@ export class DeleteProvider {
     const product = await this.productRepository.findOne({
       where: {
         id: productId,
-      },
-      relations: {
-        createdBy: true,
+
+        createdBy: {
+          id: userId,
+        },
       },
     });
 

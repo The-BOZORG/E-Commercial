@@ -67,8 +67,9 @@ export class ProductsController {
   update(
     @Param('id') productId: string,
     @Body() updateProductDto: UpdateProductDto,
+    @Authorized('userId') userId: string,
   ) {
-    return this.updateProvider.update(productId, updateProductDto);
+    return this.updateProvider.update(productId, updateProductDto, userId);
   }
 
   @Delete('delete/:id')
