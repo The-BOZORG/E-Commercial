@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Query,
   Req,
@@ -32,17 +34,20 @@ export class AuthController {
   ) {}
 
   @Post('register')
+  @HttpCode(HttpStatus.CREATED)
   register(@Body() registerDto: RegisterDto) {
     return this.registerService.register(registerDto);
   }
 
   @Get('verify-email')
-  async verifyEmail(@Query('token') token: string) {
+  @HttpCode(HttpStatus.OK)
+  verifyEmail(@Query('token') token: string) {
     return this.verifyEmailService.verify(token);
   }
 
   @Post('login')
-  async login(
+  @HttpCode(HttpStatus.OK)
+  login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
@@ -50,12 +55,14 @@ export class AuthController {
   }
 
   @Post('refresh')
-  async refresh(@Req() request: Request) {
+  @HttpCode(HttpStatus.OK)
+  refresh(@Req() request: Request) {
     return this.refreshTokenService.refresh(request);
   }
 
   @Post('logout')
-  async logout(
+  @HttpCode(HttpStatus.OK)
+  logout(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
