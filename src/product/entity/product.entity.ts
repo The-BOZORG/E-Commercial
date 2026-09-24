@@ -1,3 +1,4 @@
+import { CartItem } from '../../cart/entity/cart-item.entity';
 import { User } from '../../users/entity/user.entity';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -58,6 +60,9 @@ export class Product {
     name: 'created_by',
   })
   createdBy: User;
+
+  @OneToMany(() => CartItem, (cartItem) => cartItem.product)
+  cartItems: CartItem[];
 
   @CreateDateColumn({
     type: 'timestamp',
