@@ -3,12 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserRole } from '../../auth/enum/enum.auth';
 import { Exclude } from 'class-transformer';
 import { Product } from '../../product/entity/product.entity';
+import { Cart } from '../../cart/entity/cart.entity';
 
 @Entity('users')
 export class User {
@@ -62,6 +64,9 @@ export class User {
 
   @OneToMany(() => Product, (product) => product.createdBy)
   products: Product[];
+
+  @OneToOne(() => Cart, (cart) => cart.user)
+  cart: Cart;
 
   @CreateDateColumn({
     type: 'timestamp',

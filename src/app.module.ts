@@ -17,6 +17,7 @@ import { UsersModule } from './users/users.module';
 import { appConfig } from './config/app.config';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { OrderModule } from './order/order.module';
     UsersModule,
     ProductModule,
     OrderModule,
+    CartModule,
   ],
   controllers: [],
   providers: [],
