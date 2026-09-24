@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -7,6 +8,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
+import { ProductCategory } from '../enum/production.enum';
 
 export class CreateProductDto {
   @IsString()
@@ -28,4 +30,7 @@ export class CreateProductDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @IsEnum(ProductCategory)
+  category: ProductCategory;
 }

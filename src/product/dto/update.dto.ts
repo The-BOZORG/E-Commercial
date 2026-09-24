@@ -1,11 +1,13 @@
 import {
   IsBoolean,
+  IsEnum,
   IsInt,
   IsNumber,
   IsOptional,
   IsString,
   Min,
 } from 'class-validator';
+import { ProductCategory } from '../enum/production.enum';
 
 export class UpdateProductDto {
   @IsOptional()
@@ -29,4 +31,8 @@ export class UpdateProductDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @IsEnum(ProductCategory)
+  @IsBoolean()
+  category?: ProductCategory;
 }

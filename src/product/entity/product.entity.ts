@@ -11,6 +11,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProductCategory } from '../enum/production.enum';
 
 @Entity('products')
 export class Product {
@@ -51,6 +52,13 @@ export class Product {
     default: true,
   })
   isActive: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: ProductCategory,
+    nullable: false,
+  })
+  category: ProductCategory;
 
   @Index('idx_products_created_by')
   @ManyToOne(() => User, (user) => user.products, {
