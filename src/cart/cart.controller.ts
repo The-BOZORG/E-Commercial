@@ -27,11 +27,17 @@ import { UpdateCartItemDto } from './dto/cart-update.dto';
 import { UpdateItemProvider } from './providers/update.provider';
 import { RemoveItemProvider } from './providers/delete.provider';
 import { ClearCartProvider } from './providers/clear.provider';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('cart')
 @ApiTags('Cart')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@Throttle({ global: {} })
+@ApiResponse({
+  status: HttpStatus.TOO_MANY_REQUESTS,
+  description: 'Rate limit: 50 requests per 5 minutes.',
+})
 export class CartController {
   constructor(
     private readonly addItemProvider: AddItemProvider,

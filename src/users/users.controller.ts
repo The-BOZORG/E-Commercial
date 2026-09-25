@@ -30,11 +30,17 @@ import { DeleteUserProvider } from './providers/delete.provider';
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { UserRole } from 'src/auth/enum/enum.auth';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('users')
 @ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
+@Throttle({ auth: {} })
+@ApiResponse({
+  status: HttpStatus.TOO_MANY_REQUESTS,
+  description: 'Rate limit: 15 requests per 3 minutes.',
+})
 export class UsersController {
   constructor(
     private readonly getMeProvider: GetMeProvider,

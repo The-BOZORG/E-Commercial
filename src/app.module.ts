@@ -17,6 +17,8 @@ import { UsersModule } from './users/users.module';
 import { appConfig } from './config/app.config';
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -40,6 +42,19 @@ import { CartModule } from './cart/cart.module';
       useFactory: getTypeOrmConfig,
     }),
 
+    ThrottlerModule.forRoot([
+      {
+        name: 'auth',
+        ttl: 3 * 60 * 1000, //3 min
+        limit: 15,
+      },
+      {
+        name: 'global',
+        ttl: 5 * 60 * 1000, //5 min
+        limit: 50,
+      },
+    ]),
+
     RedisModule,
     HealthModule,
     AuthModule,
@@ -49,6 +64,11 @@ import { CartModule } from './cart/cart.module';
     CartModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

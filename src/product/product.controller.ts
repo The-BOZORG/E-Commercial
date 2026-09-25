@@ -33,9 +33,15 @@ import { UserRole } from 'src/auth/enum/enum.auth';
 import { UpdateProductDto } from './dto/update.dto';
 import { UpdateProvider } from './providers/update.provider';
 import { DeleteProvider } from './providers/delete.provider';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('product')
 @ApiTags('Products')
+@Throttle({ global: {} })
+@ApiResponse({
+  status: HttpStatus.TOO_MANY_REQUESTS,
+  description: 'Rate limit: 50 requests per 5 minutes.',
+})
 export class ProductsController {
   constructor(
     private readonly findOneProvider: FindOneProvider,

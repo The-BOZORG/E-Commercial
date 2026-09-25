@@ -29,10 +29,16 @@ import { LoginService } from './providers/login.provider';
 import { RefreshTokenService } from './providers/refresh-token.provider';
 import { LogoutService } from './providers/logout.provider';
 import { AuthResponseInterceptor } from './interceptor/auth-response.interceptor';
+import { Throttle } from '@nestjs/throttler';
 
 @UseInterceptors(AuthResponseInterceptor)
 @ApiTags('Auth')
 @Controller('auth')
+@Throttle({ auth: {} })
+@ApiResponse({
+  status: HttpStatus.TOO_MANY_REQUESTS,
+  description: 'Rate limit: 15 requests per 3 minutes.',
+})
 export class AuthController {
   constructor(
     private readonly registerService: RegisterService,
@@ -44,7 +50,9 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Register a new user' })
+  @ApiOperation({
+    summary: 'Register a new user',
+  })
   @ApiBody({ type: RegisterDto })
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -56,7 +64,9 @@ export class AuthController {
 
   @Get('verify-email')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Verify user email with token' })
+  @ApiOperation({
+    summary: 'Verify user email with token',
+  })
   @ApiQuery({
     name: 'token',
     required: true,
@@ -73,7 +83,9 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Login user and create session' })
+  @ApiOperation({
+    summary: 'Login user and create session',
+  })
   @ApiBody({ type: LoginDto })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -89,7 +101,9 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Refresh access token using refresh token cookie' })
+  @ApiOperation({
+    summary: 'Refresh access token using refresh token cookie',
+  })
   @ApiCookieAuth('refresh_token')
   @ApiResponse({
     status: HttpStatus.OK,
