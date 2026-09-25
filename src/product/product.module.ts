@@ -20,5 +20,6 @@ import { ProductCacheService } from './services/product-cache.service';
     DeleteProvider,
     ProductCacheService,
   ],
+  exports: [TypeOrmModule],
 })
 export class ProductModule {}
