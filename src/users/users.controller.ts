@@ -9,6 +9,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetMeProvider } from './providers/get-me.provider';
 import { JwtAuthGuard } from 'src/shared/guards/auth.guard';
 import { Authorized } from 'src/shared/decorator/authorized.decorator';
@@ -24,6 +32,8 @@ import { UserRole } from 'src/auth/enum/enum.auth';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 
 @Controller('users')
+@ApiTags('Users')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
   constructor(
@@ -36,19 +46,34 @@ export class UsersController {
 
   @Get('me')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get current authenticated user profile' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Current user information.',
+  })
   getMe(@Authorized('userId') userId: string) {
     return this.getMeProvider.execute(userId);
   }
 
-  @Get('all') // GET /users?page=2&limit=10
+  @Get('all')
   @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get all users with pagination (Admin only)' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Users list retrieved.' })
   getUsers(@Query() query: UsersQueryDto) {
     return this.getUsersProvider.getAll(query);
   }
 
   @Patch('update')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Update current user profile' })
+  @ApiBody({ type: UpdateUserDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User updated successfully.',
+  })
   updateMe(
     @Authorized('userId') userId: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -58,6 +83,12 @@ export class UsersController {
 
   @Patch('password')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Update current user password' })
+  @ApiBody({ type: UpdatePasswordDto })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Password updated successfully.',
+  })
   updatePassword(
     @Authorized('userId') userId: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
@@ -70,6 +101,11 @@ export class UsersController {
 
   @Delete('delete')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete current authenticated user' })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'User deleted successfully.',
+  })
   deleteMe(@Authorized('userId') userId: string): Promise<void> {
     return this.deleteUserProvider.delete(userId);
   }

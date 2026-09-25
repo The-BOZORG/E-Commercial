@@ -13,7 +13,7 @@ export class FindOneProvider {
     private readonly productCacheService: ProductCacheService,
   ) {}
 
-  public async findOne(productId: string) {
+  public async findOne(productId: string): Promise<Product> {
     const cachedProduct = await this.productCacheService.getProduct(productId);
 
     if (cachedProduct) {
