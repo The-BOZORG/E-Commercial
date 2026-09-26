@@ -45,6 +45,8 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Check versions
         run: |
