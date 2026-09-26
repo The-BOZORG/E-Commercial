@@ -29,7 +29,6 @@ A modular REST API for an e-commerce platform built with NestJS. The application
 - **Email:** Nodemailer, `@nestjs-modules/mailer`, EJS templates
 - **API documentation:** Swagger / OpenAPI
 - **Package manager:** pnpm
-- **Testing:** Jest, Supertest
 - **Containerization:** Docker and Docker Compose
 
 ## Architecture Diagram
@@ -201,21 +200,6 @@ Redis is provided by the global `RedisModule` and is used for:
 - Product cache: `product:<product-id>` with a ten-minute TTL
 
 Product cache entries are read on product lookup, written after a cache miss, and invalidated on product update or deletion.
-
-## Redis Session Flow
-
-```mermaid
-flowchart TD
-    Login[Successful login] --> Generate[Generate refresh token and session id]
-    Generate --> Store[Redis SET session:id with 7-day TTL]
-    Store --> Cookie[Set HTTP-only refresh_token cookie]
-    Cookie --> Refresh[POST /auth/refresh]
-    Refresh --> Verify[Verify JWT and compare Redis session]
-    Verify --> Access[Issue new access token]
-    Cookie --> Logout[POST /auth/logout]
-    Logout --> Delete[Redis DEL session:id]
-    Delete --> Clear[Clear refresh cookie]
-```
 
 ## API Documentation
 
