@@ -85,8 +85,6 @@ Important relationships:
 - One user has at most one cart.
 - One cart has many cart items.
 - Each cart item references one product.
-- Deleting cart items when a cart is deleted is configured with cascade behavior.
-- Product and user deletion are currently restricted by related foreign keys.
 
 The schema is created and changed through TypeORM migrations. Runtime synchronization is disabled with `synchronize: false`.
 

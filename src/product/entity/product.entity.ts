@@ -63,6 +63,7 @@ export class Product {
   @Index('idx_products_created_by')
   @ManyToOne(() => User, (user) => user.products, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({
     name: 'created_by',

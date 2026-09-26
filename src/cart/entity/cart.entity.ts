@@ -18,6 +18,7 @@ export class Cart {
 
   @OneToOne(() => User, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({
     name: 'user_id',
