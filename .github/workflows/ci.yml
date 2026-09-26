@@ -57,8 +57,8 @@ jobs:
       - name: Run database migrations
         env:
           NODE_ENV: ${{ vars.NODE_ENV }}
-          DATABASE_HOST: localhost
-          DATABASE_PORT: 3307
+          DATABASE_HOST: ${{ vars.DATABASE_HOST}}
+          DATABASE_PORT: ${{ vars.DATABASE_PORT}}
           DATABASE_USERNAME: ${{ vars.DATABASE_USERNAME }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DATABASE_NAME: ${{ vars.DATABASE_NAME }}
