@@ -1,8 +1,8 @@
-# 🛒 E-Commerce API
+# E-Commerce API
 
 A modular REST API for an e-commerce platform built with NestJS. The application provides user registration and email verification, JWT-based authentication, product management, Redis-backed sessions and caching, and authenticated shopping carts.
 
-## ✨ Features
+## Features
 
 - User registration with Argon2 password hashing
 - Email verification with time-limited Redis tokens
@@ -11,21 +11,19 @@ A modular REST API for an e-commerce platform built with NestJS. The application
 - Role-based access control for administrators
 - Product CRUD operations with pagination
 - Redis caching for individual products
-- Authenticated shopping carts and cart-item management
-- Stock and product-availability checks when adding or updating cart items
 - MySQL persistence through TypeORM migrations
 - Health checks for MySQL and Redis
 - Global request validation and throttling
 - Swagger/OpenAPI documentation
 - Docker Compose setup for the API, MySQL, and Redis
 
-## 🛠 Tech Stack
+## Tech Stack
 
-- **Runtime:** Node.js 24, TypeScript
-- **Framework:** NestJS 11
-- **Database:** MySQL 8.4
+- **Runtime:** Node.js, TypeScript
+- **Framework:** NestJS
+- **Database:** MySQL
 - **ORM:** TypeORM
-- **Cache and sessions:** Redis 7
+- **Cache and sessions:** Redis
 - **Authentication:** Passport, JWT, Argon2
 - **Validation:** `class-validator`, `class-transformer`, Joi
 - **Email:** Nodemailer, `@nestjs-modules/mailer`, EJS templates
@@ -34,33 +32,7 @@ A modular REST API for an e-commerce platform built with NestJS. The application
 - **Testing:** Jest, Supertest
 - **Containerization:** Docker and Docker Compose
 
-## 🏗 Architecture
-
-The project follows a modular NestJS architecture. Controllers expose HTTP endpoints, providers contain application use cases, entities describe persistence models, and shared guards/decorators provide cross-cutting authentication behavior.
-
-```text
-Client
-  |
-  v
-NestJS HTTP API (/api/v1)
-  |
-  +--> AuthModule ------> UsersModule ------> MySQL
-  |        |
-  |        +-------------> Redis sessions and verification tokens
-  |        +-------------> MailModule / SMTP
-  |
-  +--> ProductModule ---> MySQL
-  |        |
-  |        +-------------> Redis product cache
-  |
-  +--> CartModule ------> MySQL
-  |        |
-  |        +-------------> ProductModule for product and stock checks
-  |
-  +--> HealthModule ----> MySQL and Redis health indicators
-```
-
-## 📊 Architecture Diagram
+## Architecture Diagram
 
 ```mermaid
 flowchart LR
@@ -81,7 +53,7 @@ flowchart LR
     Health --> Redis
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 src/
@@ -99,7 +71,7 @@ src/
 └── main.ts               Application bootstrap, validation, Swagger, and server setup
 ```
 
-## 🗄 Database Design
+## Database Design
 
 The application uses four main tables:
 
@@ -119,7 +91,7 @@ Important relationships:
 
 The schema is created and changed through TypeORM migrations. Runtime synchronization is disabled with `synchronize: false`.
 
-## 📊 ER Diagram
+## ER Diagram
 
 ```mermaid
 erDiagram
@@ -155,7 +127,7 @@ erDiagram
 
     CARTS {
         uuid id PK
-        uuid user_id FK UK
+        uuid user_id FK
         timestamp created_at
         timestamp updated_at
     }
@@ -168,7 +140,7 @@ erDiagram
     }
 ```
 
-## 🔐 Authentication & Authorization
+## Authentication & Authorization
 
 Authentication uses two JWT types:
 
@@ -185,7 +157,7 @@ Authorization is enforced with:
 
 Administrator emails are configured through `ADMIN_EMAILS` during registration.
 
-## 📊 Authentication Flow
+## Authentication Flow
 
 ```mermaid
 sequenceDiagram
@@ -220,7 +192,7 @@ sequenceDiagram
     A-->>C: Clear refresh cookie
 ```
 
-## ⚡ Redis & Session Management
+## Redis & Session Management
 
 Redis is provided by the global `RedisModule` and is used for:
 
@@ -230,7 +202,7 @@ Redis is provided by the global `RedisModule` and is used for:
 
 Product cache entries are read on product lookup, written after a cache miss, and invalidated on product update or deletion.
 
-## 📊 Redis Session Flow
+## Redis Session Flow
 
 ```mermaid
 flowchart TD
@@ -245,7 +217,7 @@ flowchart TD
     Delete --> Clear[Clear refresh cookie]
 ```
 
-## 📚 API Documentation
+## API Documentation
 
 The API uses the following base URL:
 
@@ -270,7 +242,7 @@ Main route groups:
 | Cart     | `GET /cart/all`, `POST /cart/items`, `PATCH /cart/items/:id`, `DELETE /cart/items/:id`, `DELETE /cart/clear`   | Authenticated                                          |
 | Health   | `GET /health`                                                                                                  | Public                                                 |
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -281,14 +253,6 @@ Main route groups:
 - SMTP credentials for email verification
 
 Docker Compose can provide MySQL, Redis, and the API without installing the database services locally.
-
-### Installation
-
-```bash
-git clone <repository-url>
-cd e-commercial
-pnpm install
-```
 
 ### Environment Variables
 
@@ -337,17 +301,7 @@ pnpm migration:run
 pnpm start:dev
 ```
 
-Other useful commands:
-
-```bash
-pnpm build
-pnpm start
-pnpm start:prod
-pnpm migration:show
-pnpm migration:revert
-```
-
-## 🐳 Docker
+## Docker
 
 Start the full development stack:
 
@@ -363,74 +317,36 @@ The Compose setup starts:
 
 The API container runs migrations and then starts the development server. For container-to-container communication, use `mysql` and `redis` as hostnames in the API environment.
 
-Stop the stack:
-
-```bash
-docker compose down
-```
-
-Named volumes preserve MySQL and Redis data. Remove them only when you intentionally want to delete local development data:
-
-```bash
-docker compose down -v
-```
-
-## 🧪 Testing
-
-Run the test suite:
-
-```bash
-pnpm test
-```
-
-Watch test files:
-
-```bash
-pnpm test:watch
-```
-
-Generate coverage:
-
-```bash
-pnpm test:cov
-```
-
-Run end-to-end tests when the e2e configuration and test files are available:
-
-```bash
-pnpm test:e2e
-```
-
-## 📡 API Examples
+## API Examples
 
 ### Register
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
+POST http://localhost:3000/api/v1/auth/register
+  Content-Type: application/json
+  {
     "firstName": "Jane",
     "lastName": "Doe",
     "email": "jane@example.com",
     "password": "StrongPassword123!"
-  }'
+  }
 ```
 
 Verify the email using the token sent by the configured mail provider:
 
 ```bash
-curl "http://localhost:3000/api/v1/auth/verify-email?token=<verification-token>"
+GET http://localhost:3000/api/v1/auth/verify-email?token=<verification-token>
 ```
 
 ### Login
 
 ```bash
-curl -i -c cookies.txt -X POST http://localhost:3000/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
+POST http://localhost:3000/api/v1/auth/login
+  Content-Type: application/json
+  {
     "email": "jane@example.com",
     "password": "StrongPassword123!"
-  }'
+  }
 ```
 
 The response contains an access token. The refresh token is stored in `cookies.txt`.
@@ -438,29 +354,31 @@ The response contains an access token. The refresh token is stored in `cookies.t
 ### Get the Current User
 
 ```bash
-curl http://localhost:3000/api/v1/users/me \
-  -H "Authorization: Bearer <access-token>"
+GET http://localhost:3000/api/v1/users/me
+Authorization: Bearer <access-token>
 ```
 
 ### Add an Item to the Cart
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/cart/items \
-  -H "Authorization: Bearer <access-token>" \
-  -H "Content-Type: application/json" \
-  -d '{
+POST http://localhost:3000/api/v1/cart/items
+  Authorization: Bearer <access-token>
+  Content-Type: application/json
+  {
     "productId": "<product-id>",
     "quantity": 2
-  }'
+  }
 ```
 
 ### Refresh the Access Token
 
+The refresh token is sent automatically using the authentication cookie.
+
 ```bash
-curl -b cookies.txt -X POST http://localhost:3000/api/v1/auth/refresh
+POST http://localhost:3000/api/v1/auth/refresh
 ```
 
-## 🔒 Security
+## Security
 
 - Passwords are hashed with Argon2 before storage.
 - Access tokens are short-lived and signed with a dedicated secret.
@@ -471,51 +389,3 @@ curl -b cookies.txt -X POST http://localhost:3000/api/v1/auth/refresh
 - Global and auth-specific throttling reduce abusive request rates.
 - Secrets and SMTP credentials must be supplied through environment variables.
 - Production deployments should use HTTPS, secure cookie settings, secret rotation, and a managed secret store.
-
-## 🧠 Design Decisions
-
-- **Modular NestJS structure:** keeps authentication, users, products, carts, mail, and infrastructure concerns independently maintainable.
-- **Providers for use cases:** business operations live outside controllers and are easier to test or reuse.
-- **Redis for ephemeral state:** sessions, verification tokens, and cache entries have natural TTL-based lifecycles.
-- **Migrations instead of synchronization:** prevents accidental schema changes in shared or production databases.
-- **HTTP-only refresh cookies:** keeps the long-lived token out of normal client-side JavaScript access.
-- **Explicit DTO validation:** creates a strict boundary between external input and application logic.
-
-## 📊 Request Lifecycle
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Controller
-    participant Guard as JWT / Roles Guard
-    participant Provider
-    participant Store as MySQL / Redis
-    participant Response
-
-    Client->>Controller: HTTP request
-    Controller->>Guard: Authenticate and authorize
-    Guard-->>Controller: Request user context
-    Controller->>Provider: Validate DTO and execute use case
-    Provider->>Store: Read or write data
-    Store-->>Provider: Result
-    Provider-->>Controller: Domain result
-    Controller->>Response: Serialize response and cookies
-    Response-->>Client: HTTP response
-```
-
-## 🔮 Future Improvements
-
-- Add unit and end-to-end tests for auth, guards, ownership, cart operations, and cache invalidation.
-- Rotate refresh tokens on every refresh and detect token reuse.
-- Add database transactions for cart creation and concurrent cart updates.
-- Reserve or decrement stock during checkout instead of only checking stock in the cart.
-- Define explicit deletion behavior for products referenced by cart items.
-- Add filtering and sorting to product queries.
-- Add a dedicated checkout and order module.
-- Add structured logging, request IDs, metrics, and distributed tracing.
-- Add CI checks for formatting, linting, build, migrations, and tests.
-- Use separate environment configuration and secret management for local, staging, and production deployments.
-
-## 📄 License
-
-No open-source license is currently specified in `package.json`. Add a license file and update this section before distributing the project publicly.
