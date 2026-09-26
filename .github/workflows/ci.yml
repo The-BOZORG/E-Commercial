@@ -58,7 +58,6 @@ jobs:
 
       - name: Run database migrations
         env:
-          NODE_ENV: ${{ vars.NODE_ENV }}
           DATABASE_HOST: ${{ vars.DATABASE_HOST}}
           DATABASE_PORT: ${{ vars.DATABASE_PORT}}
           DATABASE_USERNAME: ${{ vars.DATABASE_USERNAME }}
@@ -67,10 +66,6 @@ jobs:
         run: pnpm run migration:run
 
       - name: Build
-        env:
-          NODE_ENV: ${{ vars.NODE_ENV }}
-          PORT: ${{ vars.PORT }}
-          REDIS_URL: ${{ vars.REDIS_URL }}
         run: pnpm build
 
   docker:
